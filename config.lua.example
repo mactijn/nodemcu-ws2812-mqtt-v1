@@ -1,0 +1,26 @@
+return {
+    wificlient = {
+        network  = "wifi-network",
+        password = "pre-shared key"
+    },
+
+    mqtt = {
+        broker_ip      = "192.168.1.254",
+        broker_port    = 1883,
+        broker_use_ssl = false,
+        keepalive      = 120,
+        username       = "test",
+        password       = "test",
+        reconnect_wait = 10
+    },
+
+    device_1 = {
+        name = "lamp1",
+        type = "ledstring",
+        pin = 0,
+        timer_id = 0,
+        aux_timer_id = 1,
+        ledcount = 3,
+        refresh = 20
+    }
+}
