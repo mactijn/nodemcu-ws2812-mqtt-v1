@@ -38,11 +38,12 @@ patterns = {
 }
 
 leds = ws2812.newBuffer(4)
-id = 1
+leds:fill(0, 0, 0)
+id = 0
 tmr.alarm(0, interval, tmr.ALARM_SEMI, function()
+    id = (id % table.getn(patterns)) + 1
     leds:set(0, patterns[id])
     leds:write(0)
-    id = (id % table.getn(patterns)) + 1
     -- restart timer, and re-set interval
     tmr.interval(0, interval)
     tmr.start(0)
