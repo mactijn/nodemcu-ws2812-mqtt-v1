@@ -12,13 +12,17 @@ violet = string.char(0, 148, 211)
 white = string.char(255, 255, 255)
 black = string.char(0, 0, 0)
 
-pattern = red .. orange .. yellow .. green .. blue .. indigo .. violet .. black
+pattern = red .. orange .. yellow .. green .. blue .. indigo .. violet
 
 interval = 1000
 ledcount = 3
+
 leds = ws2812.newBuffer(ledcount)
+
 tmr.alarm(0, interval, tmr.ALARM_SEMI, function()
-    -- write first part of pattern
+    -- fix up pattern if it has the wrong length
+    pattern = pattern:rep(((ledcount * 3) / pattern:len()) + 1)
+
     leds:set(0, pattern:sub(1, ledcount * 3))
     leds:write(0)
     pattern = pattern:sub(4) .. pattern:sub(1, 3)
