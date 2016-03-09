@@ -1,7 +1,7 @@
 ledcount = 3
-interval = 40
+interval = 20
 pause = 200
-steps = 10
+steps = 25
 
 -- set up led buffer
 leds = ws2812.newBuffer(ledcount)
@@ -21,10 +21,14 @@ black = { 0, 0, 0 }
 
 
 patterns = {
-    rainbow = { red, orange, yellow, green, blue, indigo, violet }
+    { red, orange, yellow, green, blue, indigo, violet },
+    { orange, yellow, green, blue, indigo, violet, red },
+    { yellow, green, blue, indigo, violet, red, orange },
+    { green, blue, indigo, violet, red, orange, yellow },
+    { blue, indigo, violet, red, orange, yellow, green },
+    { indigo, violet, red, orange, yellow, green, blue },
+    { violet, red, orange, yellow, green, blue, indigo }
 }
-
-pattern = patterns.rainbow
 
 step = 1
 tmr.alarm(0, interval, tmr.ALARM_SEMI, function()
@@ -34,16 +38,12 @@ tmr.alarm(0, interval, tmr.ALARM_SEMI, function()
     local current_weight = 100 * (step - 1);
     local fade_weight = 100 * (steps - 1);
 
-    -- copy pattern, and shift
-    tgt_pattern = pattern
-    table.insert(tgt_pattern, table.remove(tgt_pattern, 1))
-
     for i = 1, ledcount, 1 do
       -- we adjust for grb here
-      leds:set(i-1,
-        (((tgt_pattern[i][2] * current_weight) + (pattern[i][2] * previous_weight)) / fade_weight),
-        (((tgt_pattern[i][1] * current_weight) + (pattern[i][1] * previous_weight)) / fade_weight),
-        (((tgt_pattern[i][3] * current_weight) + (pattern[i][3] * previous_weight)) / fade_weight)
+      leds:set(i - 1,
+        (((patterns[2][i][2] * current_weight) + (patterns[1][i][2] * previous_weight)) / fade_weight),
+        (((patterns[2][i][1] * current_weight) + (patterns[1][i][1] * previous_weight)) / fade_weight),
+        (((patterns[2][i][3] * current_weight) + (patterns[1][i][3] * previous_weight)) / fade_weight)
       )
     end
 
@@ -51,11 +51,14 @@ tmr.alarm(0, interval, tmr.ALARM_SEMI, function()
 
     if step == steps then
         -- perform transform for next fade
-        table.insert(pattern, table.remove(pattern, 1))
+        table.insert(patterns, table.remove(patterns, 1))
+        if interval > pause then pause = interval end
         tmr.interval(0, pause)
     else
+        if interval < 20 then interval = 20 end
         tmr.interval(0, interval)
     end
     tmr.start(0)
     step = step % steps + 1
+    collectgarbage()
 end)
