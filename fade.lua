@@ -27,7 +27,7 @@ patterns = {
     { green, blue, indigo, violet, red, orange, yellow },
     { blue, indigo, violet, red, orange, yellow, green },
     { indigo, violet, red, orange, yellow, green, blue },
-    { violet, red, orange, yellow, green, blue, indigo }
+    { violet, red, orange, yellow, green, blue, indigo },
 }
 
 step = 1
